@@ -1,42 +1,227 @@
-#root {
-  max-width: 1280px;
+/* Reset */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  color: #000;
+}
+
+/* Layout container */
+.container {
+  max-width: 700px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Header */
+.title {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Global button styles */
+.button,
+.tab,
+.page-button,
+.item-button {
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Login Button */
+.button {
+  background-color: #1db954;
+  color: white;
+  margin-top: 1rem;
 }
 
-.card {
-  padding: 2em;
+/* Tabs section */
+.tab-container {
+  margin-top: 2rem;
+  width: 100%;
 }
 
-.read-the-docs {
-  color: #888;
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+}
+
+.tab {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  transition: background-color 0.2s ease;
+}
+
+.tab:hover {
+  background-color: #e1e1e1;
+}
+
+.tab.active {
+  background-color: #1db954;
+  color: white;
+  border: 1px solid #1db954;
+}
+
+/* Playlist list */
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.item-button {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  min-width: 300px;
+  max-width: 90%;
+  width: fit-content;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.item-button:hover {
+  background-color: #ddd;
+}
+
+/* Track list */
+.track-section {
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.subheading {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.track-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.track-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.track-item {
+  background-color: #f5f5f5;
+  padding: 0.6rem 1rem;
+  border-radius: 5px;
+  transition: transform 0.15s ease;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.track-item:hover {
+  transform: scale(1.01);
+  background-color: #eaeaea;
+}
+
+.track-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.track-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.track-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.track-name {
+  font-weight: 500;
+}
+
+.artist {
+  font-style: italic;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem;
+  color: #1db954;
+  transition: transform 0.2s;
+}
+
+.icon-button:hover {
+  transform: scale(1.1);
+}
+
+
+/* Pagination */
+.pagination {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+}
+
+.page-button {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 0.4rem 1rem;
+}
+
+.page-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-weight: bold;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
 }
