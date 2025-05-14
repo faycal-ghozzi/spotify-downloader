@@ -7,7 +7,7 @@ function App() {
   const [playlists, setPlaylists] = useState([]);
   const [tracks, setTracks] = useState([]);
   const [currentTab, setCurrentTab] = useState("playlists");
-  const [currentPlaylistId, setCurrentPlaylistId] = useState(null);
+  const [currentSource, setCurrentSource] = useState(null);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
   const [playingTrackId, setPlayingTrackId] = useState(null);
@@ -16,14 +16,10 @@ function App() {
 
   const audioRef = useRef(null);
 
-  let currentAudio = null;
-
   const handleDownloadTrack = async (track) => {
     const res = await fetch("http://localhost:8000/download/track", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: track.name,
         artist: track.artists?.[0]?.name
@@ -36,22 +32,22 @@ function App() {
 
   const togglePlayTrack = async (track, index) => {
     const current = audioRef.current;
-  
+
     if (playingTrackId === index && current) {
       current.pause();
       audioRef.current = null;
       setPlayingTrackId(null);
       return;
     }
-  
+
     if (current) {
       current.pause();
       audioRef.current = null;
       setPlayingTrackId(null);
     }
-  
+
     setLoadingTrackId(index);
-  
+
     try {
       const res = await fetch("http://localhost:8000/preview", {
         method: "POST",
@@ -61,21 +57,21 @@ function App() {
           artist: track.artists?.[0]?.name
         })
       });
-  
+
       const data = await res.json();
       setLoadingTrackId(null);
-  
+
       if (!data.preview_url) {
         alert("No preview available.");
         return;
       }
-  
+
       const audio = new Audio(data.preview_url);
       audioRef.current = audio;
-  
+
       audio.play();
       setPlayingTrackId(index);
-  
+
       audio.onended = () => {
         setPlayingTrackId(null);
         audioRef.current = null;
@@ -85,7 +81,6 @@ function App() {
       alert("Error playing preview.");
     }
   };
-  
 
   const handleDownloadAll = async () => {
     setShowProgress(true);
@@ -120,15 +115,15 @@ function App() {
     setPlaylists(data.items || []);
   };
 
-  const fetchTracks = async (type, id = null, newOffset = 0) => {
+  const fetchTracks = async (source, newOffset = 0) => {
     setTracks([]);
     setOffset(newOffset);
 
     let url;
-    if (type === "liked") {
+    if (source.type === "liked") {
       url = `http://localhost:8000/spotify/liked?limit=20&offset=${newOffset}`;
     } else {
-      url = `http://localhost:8000/spotify/playlist-tracks/${id}?limit=20&offset=${newOffset}`;
+      url = `http://localhost:8000/spotify/playlist-tracks/${source.id}?limit=20&offset=${newOffset}`;
     }
 
     const res = await fetch(url, {
@@ -138,22 +133,17 @@ function App() {
 
     setTracks(data.items || []);
     setTotal(data.total || 0);
-    setCurrentPlaylistId(type === "liked" ? "liked" : id);
+    setCurrentSource(source);
   };
 
-  const nextPage = () => fetchTracks(
-    currentPlaylistId === "liked" ? "liked" : "playlist",
-    currentPlaylistId === "liked" ? null : currentPlaylistId,
-    offset + 20
-  );
+  const nextPage = () => {
+    if (!currentSource) return;
+    fetchTracks(currentSource, offset + 20);
+  };
 
   const prevPage = () => {
-    if (offset === 0) return;
-    fetchTracks(
-      currentPlaylistId === "liked" ? "liked" : "playlist",
-      currentPlaylistId === "liked" ? null : currentPlaylistId,
-      offset - 20
-    );
+    if (!currentSource || offset === 0) return;
+    fetchTracks(currentSource, offset - 20);
   };
 
   return (
@@ -183,7 +173,7 @@ function App() {
               className={`tab ${currentTab === "liked" ? "active" : ""}`}
               onClick={() => {
                 setCurrentTab("liked");
-                fetchTracks("liked");
+                fetchTracks({ type: "liked" });
               }}
             >
               Liked Songs
@@ -195,7 +185,7 @@ function App() {
               {playlists.map(p => (
                 <button
                   key={p.id}
-                  onClick={() => fetchTracks("playlist", p.id)}
+                  onClick={() => fetchTracks({ type: "playlist", id: p.id })}
                   className="item-button"
                 >
                   {p.name}

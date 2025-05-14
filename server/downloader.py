@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Request
+from fastapi import APIRouter, Body, Request, HTTPException
 from yt_dlp import YoutubeDL
 import yt_dlp
 import threading
@@ -72,7 +72,6 @@ async def download_all(request: Request):
                 query = f"{name} {artist}"
                 search_and_download_youtube(query)
 
-    # Run downloads in the background
     threading.Thread(target=background_download).start()
 
     return {"status": "started", "count": len(tracks)}

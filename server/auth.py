@@ -16,24 +16,8 @@ router = APIRouter()
 CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("REDIRECT_URI", "http://127.0.0.1:8000/auth/callback")
-FRONTEND_URL = "http://localhost:5173"  # adjust if needed
+FRONTEND_URL = "http://localhost:5173"
 
-
-# @router.get("/auth/token")
-# def get_token():
-#     auth_str = f"{CLIENT_ID}:{CLIENT_SECRET}"
-#     b64_auth_str = base64.b64encode(auth_str.encode()).decode()
-
-#     headers = {
-#         "Authorization": f"Basic {b64_auth_str}",
-#         "Content-Type": "application/x-www-form-urlencoded"
-#     }
-#     data = {
-#         "grant_type": "client_credentials"
-#     }
-
-#     res = requests.post("https://accounts.spotify.com/api/token", headers=headers, data=data)
-#     return JSONResponse(content=res.json(), status_code=res.status_code)
 
 @router.get("/auth/login")
 def login():
@@ -67,5 +51,4 @@ def callback(request: Request):
     if not access_token:
         return {"error": "Failed to obtain access token", "details": token_json}
 
-    # Redirect to frontend with access token in URL fragment
     return RedirectResponse(f"{FRONTEND_URL}/#access_token={access_token}")
