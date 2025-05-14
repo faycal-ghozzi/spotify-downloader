@@ -30,6 +30,7 @@ def search_and_download_youtube(query: str, output_dir: str = "downloads"):
         'noplaylist': True,
         'quiet': True,
         'no_warnings': True,
+        'ffmpeg_location': '/opt/homebrew/bin',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
@@ -43,6 +44,7 @@ def search_and_download_youtube(query: str, output_dir: str = "downloads"):
             return {"status": "ok", "title": info["title"]}
         except Exception as e:
             return {"status": "error", "error": str(e)}
+
         
 @router.post("/download/track")
 async def download_track(request: Request):
